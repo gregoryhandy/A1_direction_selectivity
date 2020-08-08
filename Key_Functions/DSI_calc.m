@@ -2,7 +2,7 @@
 % Calculates the DSI given the upward and downward responses
 %
 % This code was writen by Gregory Handy (2020)
-% Please email gregoryhandy@pitt.edu with any questions
+% Please email ghandy@uchicago.edu with any questions
 %%
 function [ DSI, area_up,area_down ] = DSI_calc(t,x, delta_r_up,delta_r_down)
 

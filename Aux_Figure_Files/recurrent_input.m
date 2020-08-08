@@ -2,9 +2,9 @@
 % Calculate the recurrent input to the circuit
 %
 % This code was writen by Gregory Handy (2020)
-% Please email gregoryhandy@pitt.edu with any questions
+% Please email ghandy@uchicago.edu with any questions
 %%
-function [ K_up, K_down, recurrent_exc_up, recurrent_exc_down ] = ...
+function [ K_up, K_down, recurrent_exc_up, recurrent_exc_down,recurrent_PV_up,recurrent_PV_down ] = ...
     recurrent_input(param, x_interested, delta_r_up, delta_r_down)
 
 pc = 1;
@@ -36,6 +36,9 @@ end
 
 recurrent_exc_up = trapz(param.tspan,K_up(1,:));
 recurrent_exc_down = trapz(param.tspan,K_down(1,:));
+
+recurrent_PV_up = trapz(param.tspan,K_up(2,:));
+recurrent_PV_down = trapz(param.tspan,K_down(2,:));
 
 end
 

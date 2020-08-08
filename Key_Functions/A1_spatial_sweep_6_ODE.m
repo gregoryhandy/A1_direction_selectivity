@@ -11,11 +11,11 @@
 % (2Nx+1):3Nx S
 %
 % This code was writen by Gregory Handy (2020)
-% Please email gregoryhandy@pitt.edu with any questions
+% Please email ghandy@uchicago.edu with any questions
 %%
 function [ drdt ] = A1_spatial_sweep_6_ODE(t, r, x, dx, Nx, Npop, b_amp, ...
     W, tau_A, sigma, lambda, scaling_factor,sweep_speed,f_0,stim_stop,...
-    stim_delay, tau_S, inhibitory_curr,threshold)
+    stim_delay, tau_S, inhibitory_curr,threshold, ffwd_factor)
 
 drdt = zeros(Nx*Npop*2,1);
 
@@ -30,6 +30,9 @@ for pc = 1:Npop
         r((1+Nx*(2*pc-1)):(2*Nx*pc)) =  r((1+2*Nx*(pc-1)):(Nx*(2*pc-1)));
     end
 end
+
+% Apply the thresholding 
+r((1+Nx*(2*1-1)):(2*Nx*1)) = max(r((1+Nx*(2*1-1)):(2*Nx*1)),threshold);
 
 % Matrix of connection strenths (updated at each x position)
 K = zeros(Npop,Npop);
@@ -50,24 +53,17 @@ for i = 1:Nx
             
         end
         
-        stim_input = 0;
-        % delay of stim_delay ms before input
+        stim_input = 0;        
         if t > stim_delay && t < stim_stop && pc~=3
             stim_input = spatial_input_fn(x(i),f_0,b_amp(pc),sweep_speed,...
-                t-stim_delay,sigma(pc));
+                t-stim_delay,sigma(pc),stim_stop,stim_delay,ffwd_factor);
         end
         total_curr = (sum(K(pc,:))+stim_input+inhibitory_curr(pc));
         
-
         temp_curr = 1/tau_A(pc)*(-r(i+2*Nx*(pc-1))+total_curr);
         
         % rate equation
         drdt(i+2*Nx*(pc-1)) =temp_curr;   
-        
-        % thresholding for E population
-        if pc == 1 && r(i+Nx*(pc-1)) < threshold && temp_curr < 0
-            drdt(i+Nx*(pc-1))=0;
-        end
     end
 end
 

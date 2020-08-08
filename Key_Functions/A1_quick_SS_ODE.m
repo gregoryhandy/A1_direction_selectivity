@@ -3,7 +3,7 @@
 % Used when adjusting parameters assoicated with SOM and PV block
 %
 % This code was writen by Gregory Handy (2020)
-% Please email gregoryhandy@pitt.edu with any questions
+% Please email ghandy@uchicago.edu with any questions
 %%
 function [ drdt ] = A1_quick_SS_ODE(t, r, param)
 
